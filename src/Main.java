@@ -16,8 +16,7 @@ public class Main {
         Backend backend = new Backend(stateManager);
         Frontend frontend = new Frontend(buttonSize, stateManager);
 
-        Thread backendThread = new Thread(new Runner(backend));
+        Thread backendThread = new Thread(new Runner(backend, stateManager));
         backendThread.start();
-
     }
 }

@@ -24,9 +24,10 @@ public class Frontend implements Observer<Field>{
     public Frontend(int buttonSize, StateManager stateManager){
 
         this.stateManager = stateManager;
-        createGameStateObserver();
 
         field = this.stateManager.fieldManager.subscribe(this);
+
+        createGameStateObserver();
 
         this.buttonSize = buttonSize;
 

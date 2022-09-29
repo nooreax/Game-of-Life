@@ -1,24 +1,46 @@
-public class Runner implements Runnable{
+public class Runner implements Observer<GameState>, Runnable{
 
     private final Backend backend;
+    private final StateManager stateManager;
 
-    public Runner(Backend backend) {
+    private GameState gameState;
+
+
+    public Runner(Backend backend, StateManager stateManager) {
+
         this.backend = backend;
+        this.stateManager = stateManager;
+
+        gameState = stateManager.gameStateManager.subscribe(this);
     }
 
 
     @Override
-    public void run(){
+    public void run() {
 
-        while(true){
+        while (true) {
 
-            backend.execute();
+            if(gameState == GameState.RUN){
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                backend.execute();
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else if(gameState == GameState.STEP){
+
+                backend.execute();
             }
         }
+    }
+
+
+    @Override
+    public void update(GameState gameState){
+
+        this.gameState = gameState;
     }
 }

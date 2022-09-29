@@ -11,9 +11,10 @@ public class Backend implements Observer<Field>{
     public Backend(StateManager stateManager) {
 
         this.stateManager = stateManager;
-        gameStateObserver = createGameStateObserver();
 
         field = this.stateManager.fieldManager.subscribe(this);
+
+        gameStateObserver = createGameStateObserver();
     }
 
 
@@ -85,6 +86,7 @@ public class Backend implements Observer<Field>{
         if(gameState == GameState.RUN){
 
             zellCheck();
+
         }
         else if(gameState == GameState.STEP){
 
