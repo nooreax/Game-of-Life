@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldManager implements Observable<Field, Observer<Field>>{
+public class FieldManager implements Observable<Field, Observer<Field>>{ ;
 
     private List<Observer<Field>> observers = new ArrayList<>();
 

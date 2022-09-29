@@ -5,15 +5,15 @@ import java.awt.event.ActionListener;
 
 public class Frontend implements Observer<Field>{
 
-    private final int buttonSize;
+    private final StateManager stateManager;
 
-    public boolean startButtonPressed;
+    private final int buttonSize;
 
     private  final ZellButton[][] zellButtons;
 
     private Field field;
 
-    private final StateManager stateManager;
+    private GameState gameState;
 
 
     JFrame window = new JFrame("Conway's Game of Life");
@@ -24,6 +24,7 @@ public class Frontend implements Observer<Field>{
     public Frontend(int buttonSize, StateManager stateManager){
 
         this.stateManager = stateManager;
+        createGameStateObserver();
 
         field = this.stateManager.fieldManager.subscribe(this);
 
@@ -87,7 +88,18 @@ public class Frontend implements Observer<Field>{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                stateManager.gameStateManager.setGameState(GameState.RUN);
+                if(gameState == GameState.WAIT){
+
+                    startButton.setText("Stop");
+
+                    stateManager.gameStateManager.setGameState(GameState.RUN);
+                }
+                else if(gameState == GameState.RUN){
+
+                    startButton.setText("Start");
+
+                    stateManager.gameStateManager.setGameState(GameState.WAIT);
+                }
 
             }
         });
@@ -104,7 +116,10 @@ public class Frontend implements Observer<Field>{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                stateManager.gameStateManager.setGameState(GameState.STEP);
+                if(gameState == GameState.WAIT){
+
+                    stateManager.gameStateManager.setGameState(GameState.STEP);
+                }
             }
         });
         controllPanel.add(nextButton);
@@ -138,5 +153,28 @@ public class Frontend implements Observer<Field>{
             }
         }
         window.repaint();
+    }
+
+
+    private Observer<GameState> createGameStateObserver() {
+
+        final Frontend frontend = this;
+        Observer<GameState> observer = new Observer<GameState>() {
+
+            @Override
+            public void update(GameState newInformation) {
+
+                frontend.updateGameState(newInformation);
+            }
+        };
+        gameState = stateManager.gameStateManager.subscribe(observer);
+
+        return observer;
+    }
+
+
+    private void updateGameState(GameState gameState) {
+
+        this.gameState = gameState;
     }
 }

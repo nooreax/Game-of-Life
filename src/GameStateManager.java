@@ -3,9 +3,9 @@ import java.util.List;
 
 public class GameStateManager implements Observable<GameState, Observer<GameState>>{
 
-    private GameState gameState = GameState.WAIT;
-
     private List<Observer<GameState>> observers = new ArrayList<>();
+
+    private GameState gameState = GameState.WAIT;
 
     @Override
     public GameState subscribe(Observer<GameState> observer){

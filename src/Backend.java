@@ -1,21 +1,19 @@
 public class Backend implements Observer<Field>{
 
+    private final StateManager stateManager;
+
     private Field field;
 
     private Observer<GameState> gameStateObserver;
-
     private GameState gameState;
-
-    private final StateManager stateManager;
 
 
     public Backend(StateManager stateManager) {
 
         this.stateManager = stateManager;
+        gameStateObserver = createGameStateObserver();
 
         field = this.stateManager.fieldManager.subscribe(this);
-
-        gameStateObserver = createGameStateObserver();
     }
 
 
@@ -70,7 +68,7 @@ public class Backend implements Observer<Field>{
                 backend.updateGameState(newInformation);
             }
         };
-        stateManager.gameStateManager.subscribe(observer);
+        gameState = stateManager.gameStateManager.subscribe(observer);
 
         return observer;
     }
