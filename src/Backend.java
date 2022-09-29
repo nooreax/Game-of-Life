@@ -1,49 +1,42 @@
-public class Backend implements Observer<boolean[][]>{
+public class Backend implements Observer<Field>{
 
-    //das Array, welches das Feld darstellt, wird erstellt
-    private  boolean[][] field;
+    private Field field;
+
+    private Observer<GameState> gameStateObserver;
+
+    private GameState gameState;
 
     private final StateManager stateManager;
 
 
-    //ein neues Backend wird mit angepasster Feldhöhe und Feldbreite erstellt, indem am Anfang alle Zellen auf "false"
-    //gesetzt werden
-    public Backend(int feldbreite, int feldhoehe, StateManager stateManager){
+    public Backend(StateManager stateManager) {
 
         this.stateManager = stateManager;
 
-        field = new boolean[feldbreite][feldhoehe];
+        field = this.stateManager.fieldManager.subscribe(this);
 
-        stateManager.fieldManager.setField(field);
-
-        for(int i = 0; i < feldhoehe; i++) {
-            for (int j = 0; j < feldbreite; j++) {
-
-                setZelle(j, i, false);
-            }
-        }
+        gameStateObserver = createGameStateObserver();
     }
 
 
     @Override
-    public void update(boolean[][] field){
+    public void update(Field field) {
 
-
+        this.field = field;
     }
 
 
-    //der zufünftige Zustand einer bestimmten Zelle wird ausgegeben
-    public boolean getLiveOrDie(int feldbreiteWert, int feldhoeheWert){
+    public boolean getLiveOrDie(int fieldWidthValue, int fieldHeightValue) {
 
-        int anzahlNachbar = getNachbar(feldbreiteWert, feldhoeheWert);
+        int anzahlNachbar = field.getNachbar(fieldWidthValue, fieldHeightValue);
 
-        boolean zustand = getZelle(feldbreiteWert, feldhoeheWert);
+        boolean zustand = field.getZelle(fieldWidthValue, fieldHeightValue);
 
         if (!zustand && anzahlNachbar == 3) {
             return true;
         }
 
-        if (zustand && (anzahlNachbar == 2 || anzahlNachbar == 3)){
+        if (zustand && (anzahlNachbar == 2 || anzahlNachbar == 3)) {
             return true;
         }
 
@@ -51,36 +44,69 @@ public class Backend implements Observer<boolean[][]>{
     }
 
 
-    //alle Zellen werden nach ihrem zufünftigen Zustand gefragt
-    public void zellCheck(){
+    public void zellCheck() {
 
-        boolean[][] newFeld = new boolean[feldbreite][feldhoehe];
+        boolean[][] newField = new boolean[field.getFieldWidth()][field.getFieldHeight()];
 
-        for(int i = 0; i < feldhoehe; i++){
-            for(int j = 0; j < feldbreite; j++){
+        for (int i = 0; i < field.getFieldHeight(); i++) {
+            for (int j = 0; j < field.getFieldWidth(); j++) {
 
-                newFeld[j][i] = getLiveOrDie(j, i);
+                newField[j][i] = getLiveOrDie(j, i);
             }
         }
 
-        setFeld(newFeld);
+        stateManager.fieldManager.setField(newField);
     }
 
 
+    private Observer<GameState> createGameStateObserver() {
+
+        final Backend backend = this;
+        Observer<GameState> observer = new Observer<GameState>() {
+
+            @Override
+            public void update(GameState newInformation) {
+
+                backend.updateGameState(newInformation);
+            }
+        };
+        stateManager.gameStateManager.subscribe(observer);
+
+        return observer;
+    }
+
+
+    private void updateGameState(GameState gameState) {
+
+        this.gameState = gameState;
+    }
+
+
+    public void execute(){
+
+        if(gameState == GameState.RUN){
+
+            zellCheck();
+        }
+        else if(gameState == GameState.STEP){
+
+            zellCheck();
+
+            stateManager.gameStateManager.setGameState(GameState.WAIT);
+        }
+    }
 
 
     //zum Testen
 
-    //das aktuelle Feld wird in Nullen und Einsen ausgegeben
-    public void anzeigen(){
+    public void test() {
 
-        for(int i = 0; i < feldhoehe; i++) {
-            for (int j = 0; j < feldbreite; j++) {
+        for (int i = 0; i < field.getFieldHeight(); i++) {
+            for (int j = 0; j < field.getFieldWidth(); j++) {
 
-                if(getZelle(j, i)){
+                if (field.getZelle(j, i)) {
                     System.out.print("1");
-                }
-                else{
+                } else {
                     System.out.print("0");
                 }
             }

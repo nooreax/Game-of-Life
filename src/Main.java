@@ -5,22 +5,18 @@ public class Main {
     public Main() {
     }
 
-    //wird beim Start des Programms ausgeführt
     public static void main(String[] args) {
 
-        //Button-Größe wird gesetzt
         int buttonSize = 20;
 
-        //Feldbreite und Feldhöhe werden in Abhängikeit der Bildschirmgröße gesetzt
-        int feldbreite = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / buttonSize;
-        int feldhoehe = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() -125) / buttonSize;
+        int fieldWidth = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / buttonSize;
+        int fieldHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() -125) / buttonSize;
 
-        //neues Backend, Frontend und StateManager werden erstellt
-        Backend backend = new Backend(feldbreite, feldhoehe);
-        Frontend frontend = new Frontend(buttonSize, feldbreite, feldhoehe, backend);
-        StateManager stateManager = new StateManager();
+        StateManager stateManager = new StateManager(fieldWidth, fieldHeight);
+        Backend backend = new Backend(stateManager);
+        Frontend frontend = new Frontend(buttonSize, stateManager);
 
-        //bei jeder Zelle wird der Zustand aktualisiert
-        frontend.refresh(backend.getFeld());
+        Thread backendThread = new Thread(new Runner(backend));
+        backendThread.start();
     }
 }

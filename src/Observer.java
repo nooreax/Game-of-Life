@@ -1,4 +1,4 @@
-public interface Observer <T>{
+public interface Observer <C>{
 
-    void update(T newInformation);
+    void update(C newInformation);
 }

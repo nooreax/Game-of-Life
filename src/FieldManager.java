@@ -3,43 +3,61 @@ import java.util.List;
 
 public class FieldManager implements Observable<Field, Observer<Field>>{
 
-    //eine Liste mit Observern wird erstellt
     private List<Observer<Field>> observers = new ArrayList<>();
 
-    private FieldWriter fieldWriter;
+    private FieldWriter field;
 
 
-    //ein Observer wird der Liste hinzugefügt
-    @Override
-    public void subscribe(Observer<Field> observer){
+    public FieldManager(int fieldWidth, int fieldHeight){
 
-        observers.add(observer);
-    }
+        this.field = new FieldWriter();
 
+        this.field.setField(new boolean[fieldWidth][fieldHeight]);
 
-    //jeder Observer erhält die aktuelle Version des Feldes
-    private void notice() {
+        for(int i = 0; i < this.field.getFieldHeight(); i++) {
+            for (int j = 0; j < this.field.getFieldWidth(); j++) {
 
-        for(Observer<Field> observer: observers){
-
-            observer.update(fieldWriter);
+                setZelle(j, i, false);
+            }
         }
     }
 
 
-    //das alte Feld wird mit dem neuen Feld überschrieben.
-    public void setField(boolean[][] field){
+    @Override
+    public Field subscribe(Observer<Field> observer){
 
-        this.fieldWriter.setField(field);
+        observers.add(observer);
 
-        notice();
+        return field;
     }
 
 
-    //eine bestimmte Zelle erhält ihren neuen Zustand
+    private void notice() {
+
+        for(Observer<Field> observer: observers){
+
+            observer.update(field);
+        }
+    }
+
+
+    public void setField(boolean[][] field){
+
+        if(field.length == this.field.getFieldWidth() && field[0].length == this.field.getFieldHeight()) {
+
+            this.field.setField(field);
+
+            notice();
+        }
+        else{
+            throw new InvalidFieldSizeException(field.length, field[0].length);
+        }
+    }
+
+
     public void setZelle(int feldbreiteWert, int feldhoeheWert, boolean zustand){
 
-        this.fieldWriter.setZelle(feldbreiteWert, feldhoeheWert, zustand);
+        this.field.setZelle(feldbreiteWert, feldhoeheWert, zustand);
 
         notice();
     }
