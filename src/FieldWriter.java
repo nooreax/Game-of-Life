@@ -6,8 +6,8 @@ public class FieldWriter extends Field{
     }
 
 
-    public void setZelle(int feldbreiteWert, int feldhoeheWert, boolean zustand){
+    public void setZelle(int fieldWidthValue, int fieldHeightValue, boolean state){
 
-        field[feldbreiteWert][feldhoeheWert] = zustand;
+        field[fieldWidthValue][fieldHeightValue] = state;
     }
 }

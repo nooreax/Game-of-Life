@@ -2,5 +2,6 @@ public enum GameState {
 
     RUN,
     STEP,
-    WAIT
+    WAIT,
+    CLEAR
 }

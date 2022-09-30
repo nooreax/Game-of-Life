@@ -7,6 +7,8 @@ public class FieldManager implements Observable<Field, Observer<Field>>{ ;
 
     private FieldWriter field;
 
+    private boolean[][] oldField;
+
 
     public FieldManager(int fieldWidth, int fieldHeight){
 
@@ -55,10 +57,24 @@ public class FieldManager implements Observable<Field, Observer<Field>>{ ;
     }
 
 
-    public void setZelle(int feldbreiteWert, int feldhoeheWert, boolean zustand){
+    public void setZelle(int fieldWidthValue, int fieldHeightValue, boolean state){
 
-        this.field.setZelle(feldbreiteWert, feldhoeheWert, zustand);
+        this.field.setZelle(fieldWidthValue, fieldHeightValue, state);
 
         notice();
+    }
+
+
+    public void setOldField(){
+
+        field.setField(oldField);
+
+        notice();
+    }
+
+
+    public void safeOldField(){
+
+        oldField = field.getField();
     }
 }

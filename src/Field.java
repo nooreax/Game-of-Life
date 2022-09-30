@@ -31,42 +31,42 @@ public class Field {
     }
 
 
-    public int getNachbar(int feldbreiteWert, int feldhoeheWert){
+    public int getNeighbor(int fieldWidthValue, int fieldHeightValue){
 
-        int anzahlNachbar = 0;
+        int valueNeighbor = 0;
 
-        if (getZelle(feldbreiteWert-1, feldhoeheWert-1)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue-1, fieldHeightValue-1)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert-1, feldhoeheWert)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue-1, fieldHeightValue)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert-1, feldhoeheWert+1)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue-1, fieldHeightValue+1)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert, feldhoeheWert-1)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue, fieldHeightValue-1)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert, feldhoeheWert+1)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue, fieldHeightValue+1)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert+1, feldhoeheWert-1)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue+1, fieldHeightValue-1)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert+1, feldhoeheWert)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue+1, fieldHeightValue)){
+            valueNeighbor++;
         }
 
-        if (getZelle(feldbreiteWert+1, feldhoeheWert+1)){
-            anzahlNachbar++;
+        if (getZelle(fieldWidthValue+1, fieldHeightValue+1)){
+            valueNeighbor++;
         }
-        return anzahlNachbar;
+        return valueNeighbor;
     }
 
 }

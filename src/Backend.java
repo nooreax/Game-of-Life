@@ -27,7 +27,7 @@ public class Backend implements Observer<Field>{
 
     public boolean getLiveOrDie(int fieldWidthValue, int fieldHeightValue) {
 
-        int anzahlNachbar = field.getNachbar(fieldWidthValue, fieldHeightValue);
+        int anzahlNachbar = field.getNeighbor(fieldWidthValue, fieldHeightValue);
 
         boolean zustand = field.getZelle(fieldWidthValue, fieldHeightValue);
 
@@ -51,6 +51,21 @@ public class Backend implements Observer<Field>{
             for (int j = 0; j < field.getFieldWidth(); j++) {
 
                 newField[j][i] = getLiveOrDie(j, i);
+            }
+        }
+
+        stateManager.fieldManager.setField(newField);
+    }
+
+
+    public void clear() {
+
+        boolean[][] newField = new boolean[field.getFieldWidth()][field.getFieldHeight()];
+
+        for (int i = 0; i < field.getFieldHeight(); i++) {
+            for (int j = 0; j < field.getFieldWidth(); j++) {
+
+                newField[j][i] = false;
             }
         }
 
@@ -91,6 +106,12 @@ public class Backend implements Observer<Field>{
         else if(gameState == GameState.STEP){
 
             zellCheck();
+
+            stateManager.gameStateManager.setGameState(GameState.WAIT);
+        }
+        else if(gameState == GameState.CLEAR){
+
+            clear();
 
             stateManager.gameStateManager.setGameState(GameState.WAIT);
         }

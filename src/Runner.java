@@ -30,7 +30,7 @@ public class Runner implements Observer<GameState>, Runnable{
                     throw new RuntimeException(e);
                 }
             }
-            else if(gameState == GameState.STEP){
+            else if(gameState == GameState.STEP || gameState == GameState.CLEAR){
 
                 backend.execute();
             }

@@ -11,9 +11,13 @@ public class Frontend implements Observer<Field>{
 
     private  final ZellButton[][] zellButtons;
 
+    private final JButton resetButton;
+
     private Field field;
 
     private GameState gameState;
+
+    private boolean inAnimation;
 
 
     JFrame window = new JFrame("Conway's Game of Life");
@@ -66,6 +70,10 @@ public class Frontend implements Observer<Field>{
 
                         stateManager.fieldManager.setZelle(final_j, final_i, zellButtons[final_j][final_i].getZustand());
 
+                        if(gameState != GameState.RUN){
+                            stateManager.fieldManager.safeOldField();
+                        }
+
                         window.repaint();
                     }
                 });
@@ -94,6 +102,8 @@ public class Frontend implements Observer<Field>{
                     startButton.setText("Stop");
 
                     stateManager.gameStateManager.setGameState(GameState.RUN);
+
+                    changeResetButton(true);
                 }
                 else if(gameState == GameState.RUN){
 
@@ -120,10 +130,40 @@ public class Frontend implements Observer<Field>{
                 if(gameState == GameState.WAIT){
 
                     stateManager.gameStateManager.setGameState(GameState.STEP);
+
+                    changeResetButton(true);
                 }
             }
         });
         controllPanel.add(nextButton);
+
+
+    //Controll Panel: Reset-Button
+
+        JButton resetButton = new JButton("Clear");
+        resetButton.setPreferredSize(new Dimension(100, 50));
+
+        resetButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(inAnimation){
+
+                    stateManager.fieldManager.setOldField();
+
+                    if(gameState != GameState.RUN){
+                        changeResetButton(false);
+                    }
+                }
+                else{
+
+                    stateManager.gameStateManager.setGameState(GameState.CLEAR);
+                }
+            }
+        });
+        this.resetButton = resetButton;
+
+        controllPanel.add(resetButton);
 
 
 
@@ -177,5 +217,20 @@ public class Frontend implements Observer<Field>{
     private void updateGameState(GameState gameState) {
 
         this.gameState = gameState;
+    }
+
+
+    private void changeResetButton(boolean inAnimation){
+
+        this.inAnimation = inAnimation;
+
+        if(inAnimation){
+
+            resetButton.setText("Reset");
+        }
+        else{
+
+            resetButton.setText("Clear");
+        }
     }
 }
