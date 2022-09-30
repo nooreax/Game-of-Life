@@ -1,1 +1,1 @@
-# GameState-of-Life
+# Game-of-Life
