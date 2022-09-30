@@ -1,11 +1,12 @@
 import java.awt.*;
+import java.io.IOException;
 
 public class Main {
 
     public Main() {
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         int buttonSize = 20;
 
